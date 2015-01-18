@@ -3,13 +3,14 @@
 void LED_init(void);
 void LED_output(int val);
 void delay_ms(int delay_time);
+void BUTTON_init(void);
+int BUTTON_read(void);
 
 int main(){
 	LED_init();
+	BUTTON_init();
 	while(1){
-		LED_output(0);
-		delay_ms(500);
-		LED_output(1);
+		LED_output(BUTTON_read());
 		delay_ms(500);
 	}
 	//return 0;
@@ -33,4 +34,18 @@ void delay_ms(int delay_time){
 	int j;
 	j=delay_time*0xFFF;
 	for(i=0;i<j;i++);
+}
+
+void BUTTON_init(void){
+	RCC->AHB1ENR|=(0x1<<2);//Enable GPIOC
+	
+	GPIOC->MODER&=~(0x3<<26);//MODER 00 entrada en pin C13
+	GPIOC->PUPDR&=~(0x3<<26);
+	GPIOC->PUPDR|=(0x1<<26);//habilitar pull-ups en pin C13
+}
+int BUTTON_read(void){
+	if((GPIOC->IDR)&(0x1<<13)){
+		return 1;
+	}
+	return 0;
 }

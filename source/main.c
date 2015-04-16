@@ -32,7 +32,7 @@ void LED_output(int val){
 void delay_ms(int delay_time){
 	int i;
 	int j;
-	j=delay_time*0xFFF;
+	j=delay_time*0x4FF;
 	for(i=0;i<j;i++);
 }
 
